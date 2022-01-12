@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boids</title>
+    <link rel="stylesheet" href="min_css/main.min.css">
+</head>
+
+<body>
+    <section id="info-section">
+        <h1>Boids</h1>
+    <p>Interactive simulation of Craig Reynolds <a
+            href="https://www.cs.toronto.edu/~dt/siggraph97-course/cwr87/" target="_blank">boids</a>.
+    </p>
+    </section>
+    
+    <div id="sim-settings">
+        <div id="click-settings">
+            <h2>On click spawn</h2>
+            <div>
+                <input label="Boid" type="radio" id="male" name="gender" value="male" checked>
+                <input label="Obstacle" type="radio" id="female" name="gender" value="female">
+                <input label="Predator" type="radio" id="other" name="gender" value="other">
+            </div>
+        </div>
+        
+        <div id="attribute-settings">
+            <h2>Customize attributes</h2>
+            <div>
+                <input type="range" id="align-slider" name="align" min="0" max="2" step="0.1" value="1">
+                <label for="align">Alignment</label>
+                <input type="range" id="cohesion-slider" name="cohes" min="0" max="2" step="0.1" value="1">
+                <label for="cohes">Cohesion</label>
+                <input type="range" id="seperation-slider" name="seper" min="0.2" max="2.2" step="0.1" value="1.2">
+                <label for="seper">Seperation</label>
+            </div>
+        </div>
+    </div>
+    <button id="zen-button" role="button">ZEN mode</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <script src="https://unpkg.com/js-quadtree"></script>
+
+    <script src="index.js"></script>
+    <script src="boid.js"></script>
+</body>
+
+</html>

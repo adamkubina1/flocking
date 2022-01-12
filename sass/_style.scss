@@ -1,0 +1,105 @@
+
+// Typography
+*{
+    font-family: Helvetica, sans-serif;
+}
+
+// Base
+
+body {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+// Components
+
+#info-section {
+
+    position: fixed;
+    width: 100%;
+    text-align: center;
+
+    color: white;
+}
+
+#sim-settings {
+    position: fixed;
+    width: 100%;
+    bottom: 10%;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+
+
+    #click-settings {
+        text-align: center;
+
+        div {
+            background: #454857;
+            padding: 4px;
+            border-radius: 3px;
+            box-shadow: inset 0 0 0 3px rgba(35, 33, 45, 0.3),
+            0 0 0 3px rgba(185, 185, 185, 0.3);
+            
+            input {
+                width: auto;
+                height: 100%;
+                appearance: none;
+                outline: none;
+                cursor: pointer;
+                border-radius: 2px;
+                padding: 4px 8px;
+                background: #454857;
+                color: #bdbdbdbd;
+                transition: all 100ms linear;
+            }
+
+            input:checked {
+                background-image: linear-gradient(180deg, #95d891, #74bbad);
+                color: #fff;
+                box-shadow: 0 1px 1px #0000002e;
+                text-shadow: 0 1px 0px #79485f7a;
+            }
+            
+            input:before {
+                content: attr(label);
+                display: inline-block;
+                text-align: center;
+                width: 100%;
+            }
+        }
+        
+    }
+
+    #attribute-settings {
+        text-align: center;
+
+        div {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+
+#zen-button {
+    position: fixed;
+    left: 48%;
+    bottom: 5%;
+
+    background-color: #c2fbd7;
+    border-radius: 100px;
+    box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+    color: green;
+    cursor: pointer;
+    padding: 7px 20px;
+    text-align: center;
+    transition: all 250ms;
+}
+
+#zen-button:hover {
+    box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+    transform: scale(1.05) rotate(-1deg);
+}
