@@ -47,9 +47,10 @@ class Simulation {
         this.tree.insert(this.boids);
     
         this.boids.forEach(b => {
-            b.avoidEdges();
-            b.applyRules(this.tree, this.alignModifier, this.separationModifier, this.cohesionModifier, this.racism, this.perception);
+        
+            b.applyRules(this.tree, this.alignModifier, this.separationModifier, this.cohesionModifier, this.racism, this.perception);  
             b.updateBoids();
+
             b.showBoid();
         });
     }

@@ -22,7 +22,7 @@ let sim = new Simulation({
     maxSpeed: 5,
     maxForce: 1,
     perception: 50,
-    boidSize: 3,
+    boidSize: 5,
 
     alignModifier: 1,
     cohesionModifier: 1,

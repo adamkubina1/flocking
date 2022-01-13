@@ -21,8 +21,6 @@ class Boid {
         this.velocity.setMag(random(this.maxSpeed));
         
         this.acceleration = createVector();
-        
-        
     }
 
     avoidEdges(){
@@ -38,6 +36,22 @@ class Boid {
             this.position.y = this.conteinerHeight - this.boidSize;
         }
     }
+
+    bounceEdges(){
+        if(this.position.x >= this.conteinerWidth - this.boidSize){
+            this.velocity.rotate(HALF_PI);
+        }else if (this.position.x <= this.boidSize ){
+            this.velocity.rotate(HALF_PI);
+        }
+    
+        if(this.position.y >= this.conteinerHeight - this.boidSize){
+            this.velocity.rotate(HALF_PI);
+        }else if (this.position.y <= this.boidSize){
+            this.velocity.rotate(HALF_PI);
+        }
+    }
+
+
 
 
     steer(boids, alignModifier, separationModifier, cohesionModifier, racism){
@@ -132,6 +146,8 @@ class Boid {
         this.y = this.position.y;
         this.velocity.add(this.acceleration);
         this.velocity.limit(this.maxSpeed);
+        this.bounceEdges();
+
         this.acceleration.mult(0);
     }
 
