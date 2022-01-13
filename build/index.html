@@ -20,10 +20,14 @@
     <div id="sim-settings">
         <section id="click-settings">
             <h2>On click spawn</h2>
-            <div>
+            <div id="click-chosers">
                 <input label="Boid" type="radio" id="male" name="gender" value="male" checked>
                 <input label="Obstacle" type="radio" id="female" name="gender" value="female">
                 <input label="Predator" type="radio" id="other" name="gender" value="other">
+            </div>
+            <div>
+                <input type="range" id="boidCount-slider" name="boidC" min="0" max="500" step="10" value="200">
+                <label for="boidC">Boids in simulation</label>
             </div>
         </section>
         
@@ -37,12 +41,16 @@
                     <label for="cohes">Cohesion</label>
                     <input type="range" id="seperation-slider" name="seper" min="0.25" max="2.25" step="0.1" value="1.25">
                     <label for="seper">Seperation</label>
+                    <input type="range" id="speed-slider" name="speed" min="1" max="10" step="1" value="5">
+                    <label for="speed">Speed</label>
                 </div>
                 <div>
                     <input type="range" id="colors-slider" name="colors" min="1" max="8" step="1" value="1">
                     <label for="colors">Colors</label>
                     <input type="range" id="racism-slider" class="reversed-range" name="race" min="0" max="1" step="0.1" value="1">
                     <label for="race">Racism</label>
+                    <input type="checkbox" id="walls" name="walls" value="walls">
+                    <label for="walls">Walls</label><br>
                 </div>
             </div>
         </section>

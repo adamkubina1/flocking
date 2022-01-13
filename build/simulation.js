@@ -47,8 +47,14 @@ class Simulation {
         this.tree.insert(this.boids);
     
         this.boids.forEach(b => {
-        
-            b.applyRules(this.tree, this.alignModifier, this.separationModifier, this.cohesionModifier, this.racism, this.perception);  
+            if(sim.walls){
+                b.bounceEdges();
+            } else {
+                b.avoidEdges();
+            }
+
+            b.applyRules(this.tree, this.alignModifier, this.separationModifier, this.cohesionModifier, this.racism, this.perception); 
+
             b.updateBoids();
 
             b.showBoid();
@@ -62,6 +68,31 @@ class Simulation {
             this.boids.forEach(b => {
                 b.changeColor(this.numberOfColors, this.colorMap);
             });
+        }
+    }
+    changeSpeed( newSpeed ){  
+        this.maxSpeed = parseInt(newSpeed);
+
+        this.boids.forEach(b => {
+            b.maxSpeed = this.maxSpeed;
+        });
+    }
+
+    changeBoidsCount( newBoidsCount ) {
+        if (this.maxBoids >= parseInt(newBoidsCount) && parseInt(newBoidsCount) > 0){
+            let tmp = this.boidsCount;
+            this.boidsCount = parseInt(newBoidsCount);
+            
+            let change = this.boidsCount - tmp;
+            
+            // In case of equality we wont do anything
+            if( change > 0 ){
+                for (let i = 0; i < change; i++){
+                    this.boids.push( new Boid(this));
+                }
+            } else if ( change < 0 ){
+                    this.boids.length += change; //Removing boids is LIFO
+            }
         }
     }
 }

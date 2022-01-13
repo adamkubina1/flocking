@@ -17,6 +17,8 @@ class Boid {
         this.boidSize = simulation.boidSize;
         this.position = createVector(random(simulation.width), random(simulation.height));
 
+        this.walls = simulation.walls;
+
         this.velocity = p5.Vector.random2D();
         this.velocity.setMag(random(this.maxSpeed));
         
@@ -38,16 +40,30 @@ class Boid {
     }
 
     bounceEdges(){
+
+        if(this.position < this.boidSize){
+            this.position.x = this.boidSize;
+        } else if( this.position.x >= this.conteinerWidth - this.boidSize){
+            this.position.x = this.conteinerWidth - this.boidSize;
+        }
+        if (this.position.y < this.boidSize) {
+            this.position.y = this.boidSize;
+        } else if( this.position.y >= this.conteinerHeight - this.boidSize) {
+            this.position.y = this.conteinerHeight - this.boidSize;
+        }
+
+
         if(this.position.x >= this.conteinerWidth - this.boidSize){
-            this.velocity.rotate(HALF_PI);
+            this.velocity.rotate(180);
         }else if (this.position.x <= this.boidSize ){
-            this.velocity.rotate(HALF_PI);
+            this.velocity.rotate(180);
         }
     
         if(this.position.y >= this.conteinerHeight - this.boidSize){
-            this.velocity.rotate(HALF_PI);
+            this.velocity.rotate(180);
         }else if (this.position.y <= this.boidSize){
-            this.velocity.rotate(HALF_PI);
+            this.velocity.rotate(180);
+            
         }
     }
 
@@ -69,7 +85,7 @@ class Boid {
         let steeringAlign = createVector();
         let steeringCohesion = createVector();
         let steeringSeperation = createVector();
-        let steeringNoise = createVector(); //Free will modifier
+        let steeringNoise = p5.Vector.random2D(); //Free will modifier
         let steering = createVector();
 
 
@@ -117,16 +133,23 @@ class Boid {
             steeringSeperation.div(nearBoidCount);
             steeringSeperation.setMag(this.maxSpeed);
             steeringSeperation.sub(this.velocity);
-            steeringSeperation.limit(this.maxForce); 
+            steeringSeperation.limit(this.maxForce);
+
+            steeringNoise.setMag(this.maxSpeed);
+            steeringNoise.sub(this.velocity);
+            steeringNoise.limit(this.maxForce);
         }
+
 
         steeringAlign.mult(parseFloat(alignModifier));
         steeringCohesion.mult(parseFloat(cohesionModifier));
         steeringSeperation.mult(parseFloat(separationModifier));
+        steeringNoise.mult(0.2);
 
         steering.add(steeringAlign);
         steering.add(steeringCohesion);
         steering.add(steeringSeperation);
+        steering.add(steeringNoise);
 
         return steering;
     }
@@ -141,12 +164,13 @@ class Boid {
     }
 
     updateBoids(){
+
         this.position.add(this.velocity);
         this.x = this.position.x;
         this.y = this.position.y;
         this.velocity.add(this.acceleration);
         this.velocity.limit(this.maxSpeed);
-        this.bounceEdges();
+        
 
         this.acceleration.mult(0);
     }

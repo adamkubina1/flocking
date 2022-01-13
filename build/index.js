@@ -29,7 +29,9 @@ let sim = new Simulation({
     separationModifier: 1.25, //Increased separation for nicer visuals 
 
     racism: 1, //Racism 1 is no racism, 0 is full racism
-    colorMap: colorMap
+    colorMap: colorMap,
+
+    walls: false
 });
 
 
@@ -68,7 +70,9 @@ document.getElementById("zen-button").onclick = function () {
     }
 };
 
-
+document.getElementById("boidCount-slider").onchange = function () {
+    sim.changeBoidsCount(this.value);
+};
 document.getElementById("align-slider").onchange = function () {
     sim.alignModifier = this.value;
 };
@@ -81,6 +85,12 @@ document.getElementById("seperation-slider").onchange = function () {
 document.getElementById("racism-slider").onchange = function () {
     sim.racism = this.value;
 };
+document.getElementById("speed-slider").onchange = function () {
+    sim.changeSpeed(this.value);
+};
 document.getElementById("colors-slider").onchange = function () {
     sim.changeColors(this.value);
+};
+document.getElementById("walls").onchange = function () {
+    sim.walls = !sim.walls;
 };
