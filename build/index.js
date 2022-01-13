@@ -1,4 +1,6 @@
 
+
+
 // Boids in the simulation
 const flock = [];
 
@@ -15,30 +17,65 @@ const numberOfColors = colorMap.size;
 
 let alignModifier = 1;
 let cohesionModifier = 1;
-let separationModifier = 1.2;
+let separationModifier = 1.25;
+
+
+let sim = new Simulation({
+    boidsCount: 200,
+    maxBoids: 500,
+
+    maxSpeed: 3.5,
+    maxForce: 1,
+    percepetion: 50,
+
+    alignModifier: 1,
+    cohesionModifier: 1,
+    separationModifier: 1.25, //Increased separation for nicer visuals 
+
+    racism: 0,
+    numberOfColors: numberOfColors,
+
+    tree: quadtree,
+    boids: flock,
+    colorMap: colorMap,
+    obstacles: "",
+    predators: "",
+});
 
 
 function setup(){
     createCanvas(windowWidth,windowHeight);
     frameRate(60);
 
-    for (let i = 0; i < 500; i++){
-        flock.push( new Boid());
-    }
+
+    sim.initilize();
+    // for (let i = 0; i < 200; i++){
+    //     flock.push( new Boid());
+    // }
     
 }
 
 
 function draw(){
     background(51);
-    quadtree.clear();
-    quadtree.insert(flock);
-    for (let boid of flock){
+    // quadtree.clear();
+    // quadtree.insert(flock);
+
+    sim.tree.clear();
+    sim.tree.insert(sim.boids);
+    // for (let boid of flock){
+    //     boid.avoidEdges();
+    //     boid.applyRules(flock, alignModifier, separationModifier, cohesionModifier);
+    //     boid.updateBoids();
+    //     boid.showBoid();
+    // }
+    for (let boid of sim.boids){
         boid.avoidEdges();
-        boid.applyRules(flock, alignModifier, separationModifier, cohesionModifier);
+        boid.applyRules(sim.boids, sim.alignModifier, sim.separationModifier, sim.cohesionModifier);
         boid.updateBoids();
         boid.showBoid();
     }
+    
 }
 
 
