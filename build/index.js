@@ -1,81 +1,51 @@
 
-
-
-// Boids in the simulation
-const flock = [];
-
-// Create the bounding area of the quadtree (x, y, width, height)
-const boundingArea = new QT.Box(0, 0, window.innerWidth, window.innerHeight);
-// Instantiate  the new quadtree
-const quadtree = new QT.QuadTree(boundingArea);
-
 const colorMap = new Map([
     [ 0, "#aceac3"], 
-    [ 1, "#da9edc"]
+    [ 1, "#da9edc"],
+    [ 2, "#33bbcc"],
+    [ 3, "#f9f953"],
+    [ 4, "#9e764c"],
+    [ 5, "#d3ffce"],
+    [ 6, "#fdf5e6"],
+    [ 7, "#5f9ea0"],
 ]);
-const numberOfColors = colorMap.size;
 
-let alignModifier = 1;
-let cohesionModifier = 1;
-let separationModifier = 1.25;
 
 
 let sim = new Simulation({
+    height: window.innerHeight,
+    width: window.innerWidth,
+
     boidsCount: 200,
     maxBoids: 500,
 
-    maxSpeed: 3.5,
+    maxSpeed: 5,
     maxForce: 1,
-    percepetion: 50,
+    perception: 50,
+    boidSize: 3,
 
     alignModifier: 1,
     cohesionModifier: 1,
     separationModifier: 1.25, //Increased separation for nicer visuals 
 
-    racism: 0,
-    numberOfColors: numberOfColors,
-
-    tree: quadtree,
-    boids: flock,
-    colorMap: colorMap,
-    obstacles: "",
-    predators: "",
+    racism: 1, //Racism 1 is no racism, 0 is full racism
+    colorMap: colorMap
 });
+
 
 
 function setup(){
     createCanvas(windowWidth,windowHeight);
     frameRate(60);
 
-
     sim.initilize();
-    // for (let i = 0; i < 200; i++){
-    //     flock.push( new Boid());
-    // }
-    
 }
 
 
 function draw(){
     background(51);
-    // quadtree.clear();
-    // quadtree.insert(flock);
 
-    sim.tree.clear();
-    sim.tree.insert(sim.boids);
-    // for (let boid of flock){
-    //     boid.avoidEdges();
-    //     boid.applyRules(flock, alignModifier, separationModifier, cohesionModifier);
-    //     boid.updateBoids();
-    //     boid.showBoid();
-    // }
-    for (let boid of sim.boids){
-        boid.avoidEdges();
-        boid.applyRules(sim.boids, sim.alignModifier, sim.separationModifier, sim.cohesionModifier);
-        boid.updateBoids();
-        boid.showBoid();
-    }
-    
+    sim.update();
 }
 
 
@@ -100,11 +70,17 @@ document.getElementById("zen-button").onclick = function () {
 
 
 document.getElementById("align-slider").onchange = function () {
-    alignModifier = this.value;
+    sim.alignModifier = this.value;
 };
 document.getElementById("cohesion-slider").onchange = function () {
-    cohesionModifier = this.value;
+    sim.cohesionModifier = this.value;
 };
 document.getElementById("seperation-slider").onchange = function () {
-    separationModifier = this.value;
+    sim.separationModifier = this.value;
+};
+document.getElementById("racism-slider").onchange = function () {
+    sim.racism = this.value;
+};
+document.getElementById("colors-slider").onchange = function () {
+    sim.changeColors(this.value);
 };

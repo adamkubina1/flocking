@@ -1,26 +1,24 @@
 class Boid {
-    constructor(){
-        //Random int from 0 to width/height
-        let x = random(width);
-        let y = random(height);
-        let colorCode = Math.round(random(numberOfColors - 1));
+    constructor(simulation){
 
-        this.x = x;
-        this.y = y;
+        let colorCode = Math.round(random(simulation.numberOfColors - 1));
+
+        this.conteinerHeight = simulation.height;
+        this.conteinerWidth = simulation.width;
 
         //This is used for racism
         this.colorCode = colorCode;
         //This is used for visuals
-        this.color = colorMap.get(colorCode);
+        this.color = simulation.colorMap.get(colorCode);
 
-        this.maxSpeed = 3.5;
-        this.maxForce = 1;
+        this.maxSpeed = simulation.maxSpeed;
+        this.maxForce = simulation.maxForce;
 
-        this.boidSize = 3;
-        this.position = createVector(x, y);
+        this.boidSize = simulation.boidSize;
+        this.position = createVector(random(simulation.width), random(simulation.height));
 
         this.velocity = p5.Vector.random2D();
-        this.velocity.setMag(random(2, 4));
+        this.velocity.setMag(random(this.maxSpeed));
         
         this.acceleration = createVector();
         
@@ -28,21 +26,21 @@ class Boid {
     }
 
     avoidEdges(){
-        if(this.position.x > width){
+        if(this.position.x > this.conteinerWidth){
             this.position.x = this.boidSize;
         }else if (this.position.x < 0){
-            this.position.x = width - this.boidSize;
+            this.position.x = this.conteinerWidth - this.boidSize;
         }
     
-        if(this.position.y > height){
+        if(this.position.y > this.conteinerHeight){
             this.position.y = this.boidSize;
         }else if (this.position.y < 0){
-            this.position.y = height - this.boidSize;
+            this.position.y = this.conteinerHeight - this.boidSize;
         }
     }
 
 
-    steer(boids, alignModifier, separationModifier, cohesionModifier){
+    steer(boids, alignModifier, separationModifier, cohesionModifier, racism){
         
         // If in the viewing distance of the boid is only boid itself -> we are returning empy vector
         if (boids.length < 2){
@@ -57,12 +55,12 @@ class Boid {
         let steeringAlign = createVector();
         let steeringCohesion = createVector();
         let steeringSeperation = createVector();
-        let steeringNoise = createVector();
+        let steeringNoise = createVector(); //Free will modifier
         let steering = createVector();
 
 
         boids.forEach(b => {
-            if( b != this ){
+            if( b != this && this.colorCode == b.colorCode){
                 let d = dist(
                     this.position.x,
                     this.position.y,
@@ -70,18 +68,20 @@ class Boid {
                     b.position.y
                 );
                 
-                
-
+            
                 steeringCohesion.add(b.position);
 
                 steeringAlign.add(b.velocity);
+            
+             
+
+
 
                 if(d < desiredDistance){
                     let diff = p5.Vector.sub(this.position, b.position);
                     diff.div(d);
                     steeringSeperation.add(diff);
                 }
-
 
                 nearBoidCount++;
             }
@@ -103,9 +103,7 @@ class Boid {
             steeringSeperation.div(nearBoidCount);
             steeringSeperation.setMag(this.maxSpeed);
             steeringSeperation.sub(this.velocity);
-            steeringSeperation.limit(this.maxForce);
-
-            
+            steeringSeperation.limit(this.maxForce); 
         }
 
         steeringAlign.mult(parseFloat(alignModifier));
@@ -119,11 +117,11 @@ class Boid {
         return steering;
     }
 
-    applyRules(boids, alignModifier, separationModifier, cohesionModifier){
+    applyRules(tree, alignModifier, separationModifier, cohesionModifier, racism, perception){
 
-        const points = quadtree.query(new QT.Circle(this.x, this.y, 50));
+        const points = tree.query(new QT.Circle(this.x, this.y, perception));
 
-        let steer = this.steer(points, alignModifier, separationModifier, cohesionModifier);
+        let steer = this.steer(points, alignModifier, separationModifier, cohesionModifier, racism);
 
         this.acceleration.add(steer);
     }
@@ -141,5 +139,12 @@ class Boid {
         strokeWeight(this.boidSize);
         stroke(this.color);
         point(this.position.x, this.position.y);
+    }
+
+
+    changeColor( newNumberOfColors, colorMap ){
+        this.colorCode = Math.round(random( newNumberOfColors - 1));
+
+        this.color = colorMap.get(this.colorCode);
     }
 }
