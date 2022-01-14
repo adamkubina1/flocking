@@ -21,9 +21,10 @@
         <section id="click-settings">
             <h2>On click spawn</h2>
             <div id="click-chosers">
-                <input label="Boid" type="radio" id="male" name="gender" value="male" checked>
-                <input label="Obstacle" type="radio" id="female" name="gender" value="female">
-                <input label="Predator" type="radio" id="other" name="gender" value="other">
+                <input label="Nothing" type="radio" id="nothing" name="spawn" value="-1">
+                <input label="Boid" type="radio" id="boid" name="spawn" value="0" checked>
+                <input label="Obstacle" type="radio" id="obstacle" name="spawn" value="1">
+                <input label="Predator" type="radio" id="predator" name="spawn" value="2">
             </div>
             <div>
                 <input type="range" id="boidCount-slider" name="boidC" min="0" max="500" step="10" value="200">
@@ -43,12 +44,18 @@
                     <label for="seper">Seperation</label>
                     <input type="range" id="speed-slider" name="speed" min="1" max="10" step="1" value="5">
                     <label for="speed">Speed</label>
+                    <input type="range" id="perception-slider" name="perc" min="0" max="200" step="10" value="50">
+                    <label for="perc">Perception</label>
+                    <input type="range" id="size-slider" name="size" min="1" max="15" step="1" value="5">
+                    <label for="size">Size</label>
                 </div>
                 <div>
                     <input type="range" id="colors-slider" name="colors" min="1" max="8" step="1" value="1">
                     <label for="colors">Colors</label>
-                    <input type="range" id="racism-slider" class="reversed-range" name="race" min="0" max="1" step="0.1" value="1">
+                    <input type="range" id="racism-slider" name="race" min="0" max="1" step="1" value="0">
                     <label for="race">Racism</label>
+                    <input type="range" id="introversion-slider" name="intv" min="0" max="25" step="1" value="15">
+                    <label for="intv">Introversion</label>
                     <input type="checkbox" id="walls" name="walls" value="walls">
                     <label for="walls">Walls</label><br>
                 </div>
@@ -62,6 +69,7 @@
 
     <script src="boid.js"></script>
     <script src="simulation.js"></script>
+    <script src="obstacle.js"></script>
 
     <script src="index.js"></script>
 

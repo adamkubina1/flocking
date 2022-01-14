@@ -40,15 +40,14 @@ class Boid {
     }
 
     bounceEdges(){
-
-        if(this.position < this.boidSize){
+        if(this.position.x < this.boidSize){
             this.position.x = this.boidSize;
-        } else if( this.position.x >= this.conteinerWidth - this.boidSize){
+        } else if( this.position.x > this.conteinerWidth - this.boidSize){
             this.position.x = this.conteinerWidth - this.boidSize;
         }
         if (this.position.y < this.boidSize) {
             this.position.y = this.boidSize;
-        } else if( this.position.y >= this.conteinerHeight - this.boidSize) {
+        } else if( this.position.y > this.conteinerHeight - this.boidSize) {
             this.position.y = this.conteinerHeight - this.boidSize;
         }
 
@@ -63,57 +62,85 @@ class Boid {
             this.velocity.rotate(180);
         }else if (this.position.y <= this.boidSize){
             this.velocity.rotate(180);
-            
         }
     }
 
 
+    //(x−h)2+(y−k)2=r2
+    // bounceObstacle(points, obstacleSize){
+
+    //     points.forEach(o => {
+    //         if(o instanceof Obstacle && ((this.position.x - o.position.x) * (this.position.x - o.position.x) +
+    //         (this.position.y - o.position.y) * (this.position.y - o.position.y) <= obstacleSize * obstacleSize + this.boidSize / 2)){
+    //             this.velocity.rotate(180);
+    //         }
+    //     });
+    // }
 
 
-    steer(boids, alignModifier, separationModifier, cohesionModifier, racism){
+
+
+    steer(points, alignModifier, separationModifier, cohesionModifier, racism, desiredDistance, obstacleSize){
         
         // If in the viewing distance of the boid is only boid itself -> we are returning empy vector
-        if (boids.length < 2){
+        if (points.length < 2){
             return createVector();
         }
 
         
 
         let nearBoidCount = 0;
-        let desiredDistance = 20;
+        let nearBoidCountSep = 0;
+        
 
         let steeringAlign = createVector();
         let steeringCohesion = createVector();
         let steeringSeperation = createVector();
-        let steeringNoise = p5.Vector.random2D(); //Free will modifier
+        let steeringNoise = p5.Vector.random2D(); //Free will modifier?
         let steering = createVector();
+        let obstacleSteer = createVector();
 
 
-        boids.forEach(b => {
-            if( b != this && this.colorCode == b.colorCode){
-                let d = dist(
-                    this.position.x,
-                    this.position.y,
-                    b.position.x,
-                    b.position.y
-                );
-                
-            
-                steeringCohesion.add(b.position);
+        points.forEach(b => {
+            let d = dist(
+                this.position.x,
+                this.position.y,
+                b.position.x,
+                b.position.y
+            );
+            if( b instanceof Boid ){
+                if( b != this && (this.colorCode == b.colorCode || !racism)){
 
-                steeringAlign.add(b.velocity);
-            
-             
-
-
-
-                if(d < desiredDistance){
-                    let diff = p5.Vector.sub(this.position, b.position);
-                    diff.div(d);
-                    steeringSeperation.add(diff);
+                    steeringCohesion.add(b.position);
+    
+                    steeringAlign.add(b.velocity);
+    
+                    if(d <= desiredDistance){
+                        let diff = p5.Vector.sub(this.position, b.position);
+                        diff.div(d*d);
+                        steeringSeperation.add(diff);
+                    }
+    
+                    nearBoidCount++;
+                    nearBoidCountSep++;
+                } else if (this.colorCode != b.colorCode && racism) {
+                    if(d <= desiredDistance){
+                        let diff = p5.Vector.sub(this.position, b.position);
+                        
+                        steeringSeperation.add(diff);
+                    }
+    
+                    nearBoidCountSep++;
                 }
+            } else if( b instanceof Obstacle) {
+                let avoidDistance = obstacleSize + this.boidSize;
 
-                nearBoidCount++;
+                if(d <= avoidDistance){
+                    
+                    let diff = p5.Vector.sub(this.position, b.position);
+                    
+                    obstacleSteer.add(diff);
+                }
             }
         });
 
@@ -130,7 +157,7 @@ class Boid {
             steeringCohesion.sub(this.velocity);
             steeringCohesion.limit(this.maxForce);
 
-            steeringSeperation.div(nearBoidCount);
+            steeringSeperation.div(nearBoidCountSep);
             steeringSeperation.setMag(this.maxSpeed);
             steeringSeperation.sub(this.velocity);
             steeringSeperation.limit(this.maxForce);
@@ -138,6 +165,8 @@ class Boid {
             steeringNoise.setMag(this.maxSpeed);
             steeringNoise.sub(this.velocity);
             steeringNoise.limit(this.maxForce);
+
+
         }
 
 
@@ -145,20 +174,24 @@ class Boid {
         steeringCohesion.mult(parseFloat(cohesionModifier));
         steeringSeperation.mult(parseFloat(separationModifier));
         steeringNoise.mult(0.2);
+        obstacleSteer.mult(2);
 
         steering.add(steeringAlign);
         steering.add(steeringCohesion);
         steering.add(steeringSeperation);
         steering.add(steeringNoise);
+        steering.add(obstacleSteer);
 
         return steering;
     }
 
-    applyRules(tree, alignModifier, separationModifier, cohesionModifier, racism, perception){
+    applyRules(tree, alignModifier, separationModifier, cohesionModifier, racism, perception, desiredDistance, obstacleSize){
 
-        const points = tree.query(new QT.Circle(this.x, this.y, perception));
+        const points = tree.query(new QT.Circle(this.x, this.y, perception + obstacleSize));
 
-        let steer = this.steer(points, alignModifier, separationModifier, cohesionModifier, racism);
+        // this.bounceObstacle(points, obstacleSize);
+
+        let steer = this.steer(points, alignModifier, separationModifier, cohesionModifier, racism, desiredDistance, obstacleSize);
 
         this.acceleration.add(steer);
     }

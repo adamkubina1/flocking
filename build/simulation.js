@@ -12,6 +12,7 @@ class Simulation {
         this.maxForce = simulation.maxForce;
         this.perception = simulation.perception;
         this.boidSize = simulation.boidSize;
+        this.desiredDistance = simulation.desiredDistance;
 
         this.alignModifier = simulation.alignModifier;
         this.cohesionModifier = simulation.cohesionModifier;
@@ -23,8 +24,12 @@ class Simulation {
         this.numberOfColors = 1;
         this.maxNumberOfColors = this.colorMap.size;
 
-    }
+        this.obstacleSize = simulation.obstacleSize;
 
+        this.spawn = simulation.spawn;
+
+    }
+// code block
 
     //This method initilize the simulation, it is also called on resets
     initilize() {
@@ -35,6 +40,7 @@ class Simulation {
 
         this.tree = quadtree;
         this.boids = [];
+        this.obstacles = [];
 
         for (let i = 0; i < this.boidsCount; i++){
             this.boids.push( new Boid(this));
@@ -45,6 +51,7 @@ class Simulation {
     update() {
         this.tree.clear();
         this.tree.insert(this.boids);
+        this.tree.insert(this.obstacles);
     
         this.boids.forEach(b => {
             if(sim.walls){
@@ -52,12 +59,16 @@ class Simulation {
             } else {
                 b.avoidEdges();
             }
-
-            b.applyRules(this.tree, this.alignModifier, this.separationModifier, this.cohesionModifier, this.racism, this.perception); 
+            
+            b.applyRules(this.tree, this.alignModifier, this.separationModifier, this.cohesionModifier, this.racism, this.perception, (this.desiredDistance + this.boidSize), this.obstacleSize); 
 
             b.updateBoids();
 
             b.showBoid();
+        });
+
+        this.obstacles.forEach(o => {
+            o.showObstacle();
         });
     }
 
@@ -78,6 +89,25 @@ class Simulation {
         });
     }
 
+    changeSize( newSize ){  
+        this.boidSize = parseInt(newSize);
+
+        this.boids.forEach(b => {
+            b.boidSize = this.boidSize;
+        });
+    }
+
+    spawnBoid(x, y){
+        if(this.boidsCount < this.maxBoids){
+            this.changeBoidsCount(this.boidsCount + 1);
+            this.boids[this.boids.length - 1].position = createVector(x, y); //This should be changed to set position on boid initicialization
+        }
+    }
+
+    spawnObstacle(x, y){
+        this.obstacles.push(new Obstacle(x, y, this));
+    }
+
     changeBoidsCount( newBoidsCount ) {
         if (this.maxBoids >= parseInt(newBoidsCount) && parseInt(newBoidsCount) > 0){
             let tmp = this.boidsCount;
@@ -92,7 +122,7 @@ class Simulation {
                 }
             } else if ( change < 0 ){
                     this.boids.length += change; //Removing boids is LIFO
-            }
+                }
         }
     }
 }

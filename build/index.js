@@ -23,15 +23,20 @@ let sim = new Simulation({
     maxForce: 1,
     perception: 50,
     boidSize: 5,
+    desiredDistance: 15,
 
     alignModifier: 1,
     cohesionModifier: 1,
     separationModifier: 1.25, //Increased separation for nicer visuals 
 
-    racism: 1, //Racism 1 is no racism, 0 is full racism
+    racism: 0,
     colorMap: colorMap,
 
-    walls: false
+    walls: false,
+
+    obstacleSize: 40,
+
+    spawn: 0 // 0-boid, 1-obstacle, 2-predator
 });
 
 
@@ -51,7 +56,20 @@ function draw(){
 }
 
 
-
+function keyTyped() {
+    if(key == 's'){
+        switch(sim.spawn) {
+            case 0:
+              sim.spawnBoid(mouseX, mouseY);
+              break;
+            case 1:
+              sim.spawnObstacle(mouseX, mouseY);
+              break;
+            case 2:
+              sim.spawnPredator(mouseX, mouseY);
+        } 
+    }
+}
 
 
 document.getElementById("zen-button").onclick = function () {
@@ -70,6 +88,23 @@ document.getElementById("zen-button").onclick = function () {
     }
 };
 
+
+//This is probs posible to write in one function
+document.getElementById("nothing").onchange = function () {
+    sim.spawn = parseInt(this.value);
+};
+document.getElementById("boid").onchange = function () {
+    sim.spawn = parseInt(this.value);
+};
+document.getElementById("obstacle").onchange = function () {
+    sim.spawn = parseInt(this.value);
+};
+document.getElementById("predator").onchange = function () {
+    sim.spawn = parseInt(this.value);
+};
+
+
+
 document.getElementById("boidCount-slider").onchange = function () {
     sim.changeBoidsCount(this.value);
 };
@@ -83,7 +118,16 @@ document.getElementById("seperation-slider").onchange = function () {
     sim.separationModifier = this.value;
 };
 document.getElementById("racism-slider").onchange = function () {
-    sim.racism = this.value;
+    sim.racism = !sim.racism;
+};
+document.getElementById("perception-slider").onchange = function () {
+    sim.perception = this.value;
+};
+document.getElementById("introversion-slider").onchange = function () {
+    sim.desiredDistance = this.value;
+};
+document.getElementById("size-slider").onchange = function () {
+    sim.changeSize(this.value);
 };
 document.getElementById("speed-slider").onchange = function () {
     sim.changeSpeed(this.value);
