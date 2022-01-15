@@ -41,6 +41,7 @@ class Simulation {
         this.tree = quadtree;
         this.boids = [];
         this.obstacles = [];
+        this.predators = [];
 
         for (let i = 0; i < this.boidsCount; i++){
             this.boids.push( new Boid(this));
@@ -52,7 +53,8 @@ class Simulation {
         this.tree.clear();
         this.tree.insert(this.boids);
         this.tree.insert(this.obstacles);
-    
+        this.tree.insert(this.predators);
+
         this.boids.forEach(b => {
             if(sim.walls){
                 b.bounceEdges();
@@ -60,7 +62,7 @@ class Simulation {
                 b.avoidEdges();
             }
             
-            b.applyRules(this.tree, this.alignModifier, this.separationModifier, this.cohesionModifier, this.racism, this.perception, (this.desiredDistance + this.boidSize), this.obstacleSize); 
+            b.applyRules(this.tree, this.alignModifier, this.separationModifier, this.cohesionModifier, this.racism, this.perception, (this.desiredDistance + this.boidSize), this.obstacleSize, this); 
 
             b.updateBoids();
 
@@ -69,6 +71,19 @@ class Simulation {
 
         this.obstacles.forEach(o => {
             o.showObstacle();
+        });
+
+        this.predators.forEach(p => {
+            if(sim.walls){
+                p.bounceEdges();
+            } else {
+                p.avoidEdges();
+            }
+            p.applyRulesPredator(this.tree, this.obstacleSize, this.perception)
+
+            p.updateBoids();
+
+            p.showBoid();
         });
     }
 
@@ -94,6 +109,10 @@ class Simulation {
 
         this.boids.forEach(b => {
             b.boidSize = this.boidSize;
+        });
+
+        this.predators.array.forEach(p => {
+            p.boidSize = this.boidSize * 2;
         });
     }
 
@@ -123,6 +142,26 @@ class Simulation {
             } else if ( change < 0 ){
                     this.boids.length += change; //Removing boids is LIFO
                 }
+        }
+    }
+
+    spawnPredator(x, y){
+        let predator = new Boid(this);
+        predator.position = createVector(x, y);
+        predator.boidSize = this.boidSize * 3;
+        predator.colorCode = -1;
+        predator.color = "#C41E3A";
+        predator.maxSpeed = predator.maxSpeed / 2;
+
+        this.predators.push(predator);
+    }
+
+    destroyBoid( boid ){
+        
+        const index = this.boids.indexOf( boid );
+        if (index > -1) {
+            this.boids.splice(index, 1);
+            this.boidsCount--;
         }
     }
 }

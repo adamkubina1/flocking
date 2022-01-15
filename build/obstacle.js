@@ -1,6 +1,6 @@
 class Obstacle {
     constructor(x, y, simulation) {
-        //Must keep those for quadtree
+        // //Must keep those for quadtree
         this.x = x;
         this.y = y;
 

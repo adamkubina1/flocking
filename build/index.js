@@ -90,9 +90,6 @@ document.getElementById("zen-button").onclick = function () {
 
 
 //This is probs posible to write in one function
-document.getElementById("nothing").onchange = function () {
-    sim.spawn = parseInt(this.value);
-};
 document.getElementById("boid").onchange = function () {
     sim.spawn = parseInt(this.value);
 };
