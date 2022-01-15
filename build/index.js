@@ -10,8 +10,6 @@ const colorMap = new Map([
     [ 7, "#5f9ea0"],
 ]);
 
-
-
 let sim = new Simulation({
     height: window.innerHeight,
     width: window.innerWidth,
@@ -38,12 +36,15 @@ let sim = new Simulation({
     walls: false,
 
     obstacleSize: 40,
+    obstacleColor: 255,
 
     spawn: 0 // 0-boid, 1-obstacle, 2-predator
 });
 
 
-
+/**
+ * Setup for p5 app
+ */
 function setup(){
     createCanvas(windowWidth,windowHeight);
     frameRate(60);
@@ -51,13 +52,22 @@ function setup(){
     sim.initilize();
 }
 
-
+/**
+ * Drawing loop for p5 app
+ */
 function draw(){
     background(51);
 
     sim.update();
 }
 
+
+
+
+/**
+ * -------------------------------------------------
+ * Event listeners
+ */
 
 function keyTyped() {
     if(key == 's'){
