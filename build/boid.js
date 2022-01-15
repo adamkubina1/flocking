@@ -122,21 +122,19 @@ class Boid {
                         nearBoidCountSep++;
                     }
                 }
-                else if( b.colorCode == -1 ){
+            } else if( b instanceof Predator ){
                     
-                    if( d < b.boidSize){
-                        
-                        simulation.destroyBoid(this);
-                    }
-
-                    if(d <= this.perception){
-                        let diff = p5.Vector.sub(this.position, b.position);
+                if( d < b.boidSize){
                     
-                        obstacleSteer.add(diff);
-                        nearPredators++;
-                    }
+                    simulation.destroyBoid(this);
                 }
-            
+
+                if(d <= this.perception){
+                    let diff = p5.Vector.sub(this.position, b.position);
+                
+                    obstacleSteer.add(diff);
+                    nearPredators++;
+                }
             } else if( b instanceof Obstacle) {
                 let avoidDistance = obstacleSize + this.boidSize;
 

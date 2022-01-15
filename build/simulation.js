@@ -23,6 +23,9 @@ class Simulation {
         this.colorMap = simulation.colorMap;
         this.numberOfColors = 1;
         this.maxNumberOfColors = this.colorMap.size;
+        this.predatorColor = simulation.predatorColor;
+
+        this.maxSpeedPredator = simulation.maxSpeedPredator;
 
         this.obstacleSize = simulation.obstacleSize;
 
@@ -154,12 +157,7 @@ class Simulation {
     }
 
     spawnPredator(x, y){
-        let predator = new Boid(this);
-        predator.position = createVector(x, y);
-        predator.boidSize = this.boidSize * 3;
-        predator.colorCode = -1;
-        predator.color = "#C41E3A";
-        predator.maxSpeed = predator.maxSpeed / 2;
+        let predator = new Predator(x, y, this);
 
         this.predators.push(predator);
     }

@@ -32,6 +32,9 @@ let sim = new Simulation({
     racism: 0,
     colorMap: colorMap,
 
+    predatorColor: "#C41E3A",
+    maxSpeedPredator: 2,
+
     walls: false,
 
     obstacleSize: 40,
