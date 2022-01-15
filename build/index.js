@@ -14,7 +14,7 @@ let sim = new Simulation({
     height: window.innerHeight,
     width: window.innerWidth,
 
-    boidsCount: 200,
+    boidsCount: 250,
     maxBoids: 500,
 
     maxSpeed: 5,
@@ -27,16 +27,17 @@ let sim = new Simulation({
     cohesionModifier: 1,
     separationModifier: 1.25, //Increased separation for nicer visuals 
 
-    racism: 0,
+    racism: 1,
     colorMap: colorMap,
+    numberOfColors: 3, // This must be smaller than map size
 
     predatorColor: "#C41E3A",
     maxSpeedPredator: 2,
 
-    walls: false,
+    walls: true,
 
     obstacleSize: 40,
-    obstacleColor: 255,
+    obstacleColor: "#2F4F4F",
 
     spawn: 0 // 0-boid, 1-obstacle, 2-predator
 });

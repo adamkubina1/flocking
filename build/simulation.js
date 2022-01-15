@@ -24,7 +24,7 @@ class Simulation {
         this.racism = simulation.racism; //This must be boolean or 0 - 1
 
         this.colorMap = simulation.colorMap;
-        this.numberOfColors = 1;
+        this.numberOfColors = simulation.numberOfColors;
         this.maxNumberOfColors = this.colorMap.size;
 
 
