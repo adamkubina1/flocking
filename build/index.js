@@ -88,6 +88,11 @@ document.getElementById("zen-button").onclick = function () {
     }
 };
 
+document.getElementById("clear-button").onclick = function () {
+    sim.clear();
+};
+
+
 
 //This is probs posible to write in one function
 document.getElementById("boid").onchange = function () {
@@ -102,7 +107,7 @@ document.getElementById("predator").onchange = function () {
 
 
 
-document.getElementById("boidCount-slider").onchange = function () {
+document.getElementById("boidCount-slider").oninput = function () {
     sim.changeBoidsCount(this.value);
 };
 document.getElementById("align-slider").onchange = function () {

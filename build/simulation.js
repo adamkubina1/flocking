@@ -49,6 +49,14 @@ class Simulation {
 
     }
 
+    clear() {
+        this.boids = [];
+        this.obstacles = [];
+        this.predators = [];
+
+        this.boidsCount = 0;
+    }
+
     update() {
         this.tree.clear();
         this.tree.insert(this.boids);
@@ -128,7 +136,7 @@ class Simulation {
     }
 
     changeBoidsCount( newBoidsCount ) {
-        if (this.maxBoids >= parseInt(newBoidsCount) && parseInt(newBoidsCount) > 0){
+        if (this.maxBoids >= parseInt(newBoidsCount) && parseInt(newBoidsCount) >= 0){
             let tmp = this.boidsCount;
             this.boidsCount = parseInt(newBoidsCount);
             
