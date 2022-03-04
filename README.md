@@ -8,4 +8,7 @@ Moreover you can add obstacles to the simulation and predatory boids, which "hun
 
 Created as a final assignment for Web technologies course at VSE.
 
+![flocking](https://user-images.githubusercontent.com/87360961/156839514-e6fda609-7786-411d-bd52-8cd31814f8ed.png)
+![flocking1](https://user-images.githubusercontent.com/87360961/156839136-f8d01803-91ad-4807-9924-100859853522.png)
+
 Live demo <a href="https://flock-sim.netlify.app/" target="_blank">here</a>
